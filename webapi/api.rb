@@ -1,7 +1,7 @@
+$:.unshift File.join(File.dirname(__FILE__), '..', 'rbtelldus')
 require "sinatra"
 require "json"
-require_relative "../rbtelldus/device"
-
+require 'device'
 class Device
     def to_json *arg
         {   type: self.class.to_s,
