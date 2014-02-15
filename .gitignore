@@ -1,5 +1,3 @@
 *.so
 *.o
 *.swp
-mkmf.log
-Makefile
