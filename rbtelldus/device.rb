@@ -24,6 +24,24 @@ class Device
     Device.get_name( self.id )
   end
 
+  def name=(n)
+    result = Device.set_name( self.id, n )
+    if result == true
+      return true
+    else
+      return false
+    end
+  end
+
+  #params
+  def [](param)
+    Device.get_param( self.id, param )
+  end
+
+  def []=(param, value)
+    Device.set_param(self.id, param, value)
+  end
+
   def protocol
     Device.get_protocol( self.id )
   end

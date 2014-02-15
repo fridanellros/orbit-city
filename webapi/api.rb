@@ -1,6 +1,6 @@
 require "sinatra"
 require "json"
-require_relative "device"
+require_relative "../rbtelldus/device"
 
 class Device
     def to_json *arg
@@ -30,6 +30,12 @@ get '/:id' do
     d.to_json
 end
 
+get '/learn/:id' do
+  id = params[:id].to_i
+  d = Device.new_device id
+  d.learn
+end
+
 get '/switch/:id/:status' do
     id = params[:id].to_i
     status = params[:status]
@@ -45,5 +51,28 @@ get '/dim/:id/:intensity' do
 
     d = Device.new_device id
     d.dim lvl
+end
+
+get '/name/:id' do
+  id = params[:id].to_i
+  d = Device.new_device id
+  d.name
+end
+
+post '/name/:id' do
+  id = params[:id].to_i
+  name = params[:name]
+  d = Device.new_device id
+  d.name = name
+end
+
+get '/param/:id/:param' do
+  d = Device.new_device params[:id].to_i
+  d[params[:param]]
+end
+
+post '/param/:id/:param' do
+  d = Device.new_device params[:id].to_i
+  d[params[:param]] = params[:value]
 end
 

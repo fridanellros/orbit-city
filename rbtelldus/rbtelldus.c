@@ -17,7 +17,7 @@ static VALUE method_off( VALUE self, VALUE id ){
 
 static VALUE method_dim( VALUE self, VALUE id, VALUE lvl ){
     int id_ = NUM2INT( id );
-    unsigned char lvl_ = NUM2CHR( lvl );
+    char lvl_ = NUM2CHR( lvl );
     return INT2NUM( tdDim( id_, lvl_ ) );
 }
 
@@ -49,7 +49,7 @@ static VALUE method_last_sent_command( VALUE self, VALUE id, VALUE cmds ){
 
 static VALUE method_last_sent_val( VALUE self, VALUE id ){
     int id_ = NUM2INT(id);
-    unsigned char* valp = tdLastSentValue( id_ );
+    char* valp = tdLastSentValue( id_ );
     VALUE vals = rb_str_new_cstr( valp );
     tdReleaseString( valp );
 
@@ -73,6 +73,39 @@ static VALUE method_get_protocol( VALUE self, VALUE id ){
     tdReleaseString( pcp );
     return pc;
 }
+ 
+static VALUE method_set_name ( VALUE self, VALUE id, VALUE name )
+{
+  int id_ = NUM2INT(id);
+  char *name_ = StringValueCStr(name);
+  if(tdSetName(id_, name_))
+  {
+    return Qtrue;
+  }
+  return Qfalse;
+}
+
+static VALUE method_get_param ( VALUE self, VALUE id, VALUE param )
+{
+  int id_ = NUM2INT(id);
+  char *param_ = StringValueCStr(param);
+  char *value_ = tdGetDeviceParameter(id_, param_, "Not set");
+  VALUE value = rb_str_new_cstr(value_);
+  tdReleaseString(value_);
+  return value;
+}
+
+VALUE method_set_param ( VALUE self, VALUE id, VALUE param, VALUE value )
+{
+  int id_ = NUM2INT(id);
+  char *param_ = StringValueCStr(param);
+  char *value_ = StringValueCStr(value);
+  if(tdSetDeviceParameter(id_, param_, value_))
+  {
+    return Qtrue;
+  }
+  return Qfalse;
+}
 
 // The initialization method for this module
 void Init_rbtelldus() {
@@ -87,7 +120,10 @@ void Init_rbtelldus() {
     rb_define_method(RbTelldus, "last_sent_command", method_last_sent_command, 2);
     rb_define_method(RbTelldus, "last_sent_val", method_last_sent_val, 1);
     rb_define_method(RbTelldus, "get_name", method_get_name, 1);
+    rb_define_method(RbTelldus, "set_name", method_set_name, 2);
     rb_define_method(RbTelldus, "get_protocol", method_get_protocol, 1);
+    rb_define_method(RbTelldus, "get_param", method_get_param, 2);
+    rb_define_method(RbTelldus, "set_param", method_set_param, 3);
 }
 
 

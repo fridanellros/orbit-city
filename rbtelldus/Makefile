@@ -67,15 +67,15 @@ cflags   =  $(optflags) $(debugflags) $(warnflags)
 optflags = -O3
 debugflags = -ggdb
 warnflags = -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration
-CFLAGS   = -fPIC -fno-strict-aliasing -g -g -O2 -fPIC 
+CFLAGS   = -fPIC -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wall -fno-strict-aliasing -fPIC $(ARCH_FLAG)
 INCFLAGS = -I. -I$(arch_hdrdir) -I$(hdrdir)/ruby/backward -I$(hdrdir) -I$(srcdir)
-DEFS     = -D_FILE_OFFSET_BITS=64
-CPPFLAGS =  -I/usr/local/include/include  $(DEFS) $(cppflags)
-CXXFLAGS = $(CFLAGS) -fno-strict-aliasing -g
-ldflags  = -L.  -rdynamic -Wl,-export-dynamic
+DEFS     = 
+CPPFLAGS =  -I/usr/local/include/include -D_FORTIFY_SOURCE=2 $(DEFS) $(cppflags)
+CXXFLAGS = $(CFLAGS) -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -Wall -fno-strict-aliasing
+ldflags  = -L. -Wl,-Bsymbolic-functions -Wl,-z,relro -rdynamic -Wl,-export-dynamic
 dldflags = 
 ARCH_FLAG = 
-DLDFLAGS = $(ldflags) $(dldflags)
+DLDFLAGS = $(ldflags) $(dldflags) $(ARCH_FLAG)
 LDSHARED = $(CC) -shared
 LDSHAREDXX = $(CXX) -shared
 AR = ar
@@ -84,7 +84,7 @@ EXEEXT =
 RUBY_BASE_NAME = ruby
 RUBY_INSTALL_NAME = ruby1.9.1
 RUBY_SO_NAME = ruby-1.9.1
-arch = i686-linux
+arch = x86_64-linux
 sitearch = $(arch)
 ruby_version = 1.9.1
 ruby = /usr/bin/ruby1.9.1
