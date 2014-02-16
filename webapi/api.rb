@@ -67,7 +67,7 @@ get '/device/:id/name' do
   d.name.to_json
 end
 
-# name = "Lampa 1"
+# {"name": "Lampa 1"}
 post '/device/:id/name' do
   content_type :json
   id = params[:id].to_i
@@ -82,7 +82,7 @@ get '/device/:id/param/:param' do
   d[params[:param]].to_json
 end
 
-# params = { house ="a" window="b" }
+# {"params": { "house": "a", "window": "b" }}
 post '/device/:id/params' do
   content_type :json
   parameters = params[:params]

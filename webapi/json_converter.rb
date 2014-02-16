@@ -11,7 +11,7 @@ class JSonConverter
     return @app.call(env) unless body && !body.empty?
     begin
       parsed = JSON.parse body
-      env.update 'rack.request.form_hash' => parsed, 'rack.input' => env['rack.input']
+      env.update 'rack.request.form_hash' => parsed, 'rack.request.form_input' => env['rack.input']
     rescue
     end
     @app.call(env)
