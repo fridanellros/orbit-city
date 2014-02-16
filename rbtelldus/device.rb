@@ -6,7 +6,7 @@ class Device
 
   attr_accessor :id, :cmds
 
-  def self.new_device( id )
+  def self.get_device( id )
     methods = Device.methods( id )
     if methods & 16
       return Dimmer.new( id )
