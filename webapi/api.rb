@@ -41,7 +41,7 @@ get '/device/:id/learn' do
   d.learn.to_json
 end
 
-get '/devie/:id/switch/:status' do
+get '/device/:id/switch/:status' do
     content_type :json
     id = params[:id].to_i
     status = params[:status]

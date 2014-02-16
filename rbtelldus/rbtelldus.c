@@ -95,7 +95,7 @@ static VALUE method_get_param ( VALUE self, VALUE id, VALUE param )
   char *value_ = tdGetDeviceParameter(id_, param_, "Not set");
   VALUE value = rb_str_new_cstr(value_);
   tdReleaseString(value_);
-  free(param);
+  free(param_);
   return value;
 }
 
@@ -106,8 +106,12 @@ VALUE method_set_param ( VALUE self, VALUE id, VALUE param, VALUE value )
   char *value_ = StringValueCStr(value);
   if(tdSetDeviceParameter(id_, param_, value_))
   {
+    free(param_);
+    free(value_);
     return Qtrue;
   }
+  free(param_);
+  free(value_);
   return Qfalse;
 }
 
