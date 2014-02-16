@@ -25,12 +25,7 @@ class Device
   end
 
   def name=(n)
-    result = Device.set_name( self.id, n )
-    if result == true
-      return true
-    else
-      return false
-    end
+    Device.set_name( self.id, n )
   end
 
   #params

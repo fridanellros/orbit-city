@@ -66,6 +66,19 @@ static VALUE method_get_name( VALUE self, VALUE id ){
     return name;
 }
 
+static VALUE method_set_name ( VALUE self, VALUE id, VALUE name )
+{
+  int id_ = NUM2INT(id);
+  char *name_ = StringValueCStr(name);
+  if(tdSetName(id_, name_))
+  {
+    free(name_);
+    return Qtrue;
+  }
+  free(name_);
+  return Qfalse;
+}
+
 static VALUE method_get_protocol( VALUE self, VALUE id ){
     int id_ = NUM2INT(id);
     char* pcp = tdGetProtocol( id_ );
@@ -73,17 +86,7 @@ static VALUE method_get_protocol( VALUE self, VALUE id ){
     tdReleaseString( pcp );
     return pc;
 }
- 
-static VALUE method_set_name ( VALUE self, VALUE id, VALUE name )
-{
-  int id_ = NUM2INT(id);
-  char *name_ = StringValueCStr(name);
-  if(tdSetName(id_, name_))
-  {
-    return Qtrue;
-  }
-  return Qfalse;
-}
+
 
 static VALUE method_get_param ( VALUE self, VALUE id, VALUE param )
 {
@@ -92,6 +95,7 @@ static VALUE method_get_param ( VALUE self, VALUE id, VALUE param )
   char *value_ = tdGetDeviceParameter(id_, param_, "Not set");
   VALUE value = rb_str_new_cstr(value_);
   tdReleaseString(value_);
+  free(param);
   return value;
 }
 
