@@ -6,6 +6,12 @@ class Device
 
   attr_accessor :id, :cmds
 
+  # TODO: pass argument hash to set new device parameters
+  def self.new_device
+    id = Device.new_device
+    Device.get_device id
+  end
+
   def self.get_device( id )
     methods = Device.methods( id )
     if methods & 16
@@ -39,6 +45,18 @@ class Device
 
   def protocol
     Device.get_protocol( self.id )
+  end
+
+  def protocol=(proto)
+    Device.set_protocol( self.id, proto)
+  end
+
+  def model
+    Device.get_model(self.id)
+  end
+
+  def model=(m)
+    Device.set_model(self.id, m)
   end
 
   def learn

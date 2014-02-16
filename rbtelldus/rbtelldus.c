@@ -77,15 +77,6 @@ static VALUE method_set_name ( VALUE self, VALUE id, VALUE name )
   return Qfalse;
 }
 
-static VALUE method_get_protocol( VALUE self, VALUE id ){
-    int id_ = NUM2INT(id);
-    char* pcp = tdGetProtocol( id_ );
-    VALUE pc = rb_str_new_cstr( pcp );
-    tdReleaseString( pcp );
-    return pc;
-}
-
-
 static VALUE method_get_param ( VALUE self, VALUE id, VALUE param )
 {
   int id_ = NUM2INT(id);
@@ -96,7 +87,25 @@ static VALUE method_get_param ( VALUE self, VALUE id, VALUE param )
   return value;
 }
 
-VALUE method_set_param ( VALUE self, VALUE id, VALUE param, VALUE value )
+VALUE method_set_model (VALUE self, VALUE id, VALUE model)
+{
+  int id_ = NUM2INT(id);
+  char *model_ = StringValueCStr(model);
+  if(tdSetModel(id_, model_))
+    return Qtrue;
+  return Qfalse;
+}
+
+static VALUE method_get_model(VALUE self, VALUE id)
+{
+  int id_ = NUM2INT(id);
+  char *model_ = tdGetModel(id_);
+  VALUE model = rb_str_new_cstr(model_);
+  tdReleaseString(model_);
+  return model;
+}
+
+static VALUE method_set_param ( VALUE self, VALUE id, VALUE param, VALUE value )
 {
   int id_ = NUM2INT(id);
   char *param_ = StringValueCStr(param);
@@ -106,6 +115,39 @@ VALUE method_set_param ( VALUE self, VALUE id, VALUE param, VALUE value )
     return Qtrue;
   }
   return Qfalse;
+}
+
+static VALUE method_get_protocol(VALUE self, VALUE id)
+{
+  int id_ = NUM2INT(id);
+  char* protocol_ = tdGetProtocol(id_);
+  VALUE protocol = rb_str_new_cstr(protocol_);
+  tdReleaseString(protocol_);
+  return protocol;
+}
+
+static VALUE method_set_protocol(VALUE self, VALUE id, VALUE protocol)
+{
+  int id_ = NUM2INT(id);
+  char *protocol_ = StringValueCStr(protocol);
+  if(tdSetProtocol(id_, protocol_))
+    return Qtrue;
+  return Qfalse;
+}
+
+static VALUE
+method_remove_device(VALUE self, VALUE id)
+{
+  int id_ = NUM2INT(id);
+  if(tdRemoveDevice(id_))
+    return Qtrue;
+  return Qfalse;
+}
+
+static VALUE
+method_add_device(VALUE self)
+{
+  return INT2NUM(tdAddDevice());
 }
 
 // The initialization method for this module
@@ -122,9 +164,14 @@ void Init_rbtelldus() {
     rb_define_method(RbTelldus, "last_sent_val", method_last_sent_val, 1);
     rb_define_method(RbTelldus, "get_name", method_get_name, 1);
     rb_define_method(RbTelldus, "set_name", method_set_name, 2);
-    rb_define_method(RbTelldus, "get_protocol", method_get_protocol, 1);
     rb_define_method(RbTelldus, "get_param", method_get_param, 2);
     rb_define_method(RbTelldus, "set_param", method_set_param, 3);
+    rb_define_method(RbTelldus, "remove_device", method_remove_device, 1);
+    rb_define_method(RbTelldus, "add_device", method_add_device, 0);
+    rb_define_method(RbTelldus, "get_model", method_get_model, 1);
+    rb_define_method(RbTelldus, "set_model", method_set_model, 2);
+    rb_define_method(RbTelldus, "get_protocol", method_get_protocol, 1);
+    rb_define_method(RbTelldus, "set_protocol", method_set_protocol, 2);
 }
 
 
