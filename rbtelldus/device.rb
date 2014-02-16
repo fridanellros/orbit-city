@@ -72,7 +72,7 @@ class Device
 
     ( 0...Device.number_of_devices ).each do | i |
       id = Device.id_from_idx( i )
-      devlist << Device.new_device( id )
+      devlist << Device.get_device( id )
     end
 
     return devlist
